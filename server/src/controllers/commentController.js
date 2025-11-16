@@ -82,10 +82,9 @@ router.get("/movie/:id", async (req, res) => {
       <!DOCTYPE html>
       <html>
         <head><meta charset="UTF-8"></head>
-        <body style="margin:0; padding:0; overflow:hidden;">
+        <body >
           <iframe 
             src="${realUrl}" 
-            style="width:100%; height:100%; border:0;" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
