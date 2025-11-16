@@ -70,4 +70,20 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
+router.get("/movie/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // The real URL you want to hide from the frontend
+    const realUrl = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
+
+    // Return it as JSON
+    res.status(200).json({ url: realUrl });
+  } catch (error) {
+    res.json({
+      message: "Something went wrong with movie url",
+    });
+  }
+});
+
 module.exports = router;
