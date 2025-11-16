@@ -70,19 +70,34 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-router.get("/movie/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    // The real URL you want to hide from the frontend
+    // The real video URL
     const realUrl = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
 
-    // Return it as JSON
-    res.status(200).json({ url: realUrl });
+    // Serve an HTML page with the real URL embedded inside an iframe
+    res.setHeader("Content-Type", "text/html");
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+        </head>
+        <body style="margin:0; padding:0; overflow:hidden;">
+          <iframe 
+            src="${realUrl}" 
+            style="width:100%; height:100%; border:0;" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </body>
+      </html>
+    `);
   } catch (error) {
-    res.json({
-      message: "Something went wrong with movie url",
-    });
+    console.error(error);
+    res.status(500).send("Server error");
   }
 });
 
