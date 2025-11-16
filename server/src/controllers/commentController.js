@@ -77,27 +77,11 @@ router.get("/movie/:id", async (req, res) => {
     // The real video URL
     const realUrl = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
 
-    // Serve an HTML page with the real URL embedded inside an iframe
-    res.setHeader("Content-Type", "text/html");
-    res.status(200).send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8">
-        </head>
-        <body style="margin:0; padding:0; overflow:hidden;">
-          <iframe 
-            src="${realUrl}" 
-            style="width:100%; height:100%; border:0;" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </body>
-      </html>
-    `);
+    // Return as JSON
+    res.status(200).json({ url: realUrl });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Server error" });
   }
 });
 
