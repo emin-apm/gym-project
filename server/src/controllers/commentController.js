@@ -76,12 +76,22 @@ router.get("/movie/:id", async (req, res) => {
     const { id } = req.params;
     const realUrl = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
 
-    // Fetch the HTML from MultiEmbed
-    const response = await axios.get(realUrl);
-
-    // Serve it directly to your frontend
+    // Return a minimal HTML page with the iframe
     res.setHeader("Content-Type", "text/html");
-    res.send(response.data);
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head><meta charset="UTF-8"></head>
+        <body style="margin:0; padding:0; overflow:hidden;">
+          <iframe 
+            src="${realUrl}" 
+            style="width:100%; height:100%; border:0;" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </body>
+      </html>
+    `);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server error");
