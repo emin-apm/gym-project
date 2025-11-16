@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const commentService = require("../services/commentService");
 const { auth } = require("../middlewares/authMiddleware");
+const axios = require("axios");
 
 router.get("/", async (req, res) => {
   const limit = Number(req.query.limit);
@@ -73,26 +74,16 @@ router.put("/:id", auth, async (req, res) => {
 router.get("/movie/:id", async (req, res) => {
   try {
     const { id } = req.params;
-
     const realUrl = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
 
+    // Fetch the HTML from MultiEmbed
+    const response = await axios.get(realUrl);
+
+    // Serve it directly to your frontend
     res.setHeader("Content-Type", "text/html");
-    res.status(200).send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8">
-        </head>
-        <body style="margin:0; padding:0; overflow:hidden;">
-          <iframe 
-            src="${realUrl}" 
-            style="width:100%; height:100%; border:0;" 
-            allowfullscreen
-          ></iframe>
-        </body>
-      </html>
-    `);
+    res.send(response.data);
   } catch (error) {
+    console.error(error);
     res.status(500).send("Server error");
   }
 });
